@@ -1,0 +1,53 @@
+.viewport {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden; /* Cache ce qui dépasse de l'écran */
+  background: #f0f2f5;
+}
+
+.sliding-track {
+  display: flex;
+  width: 150vw; /* 3 panneaux x 50vw */
+  height: 100%;
+  transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+  
+  /* État initial (Login) : On décale pour voir Panneau 2 et 3 */
+  /* On recule de 50vw pour que le Panneau 2 soit à gauche de l'écran */
+  transform: translateX(-50vw); 
+}
+
+/* État Register : On revient à 0 pour voir Panneau 1 et 2 */
+.register-state {
+  transform: translateX(0);
+}
+
+.panel {
+  width: 50vw;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  box-sizing: border-box;
+}
+
+.panel-1 { background: #ffffff; } /* Register extra */
+.panel-2 { background: #ffffff; border-left: 1px solid #eee; } /* Login/Common */
+.panel-3 { background: #2c3e50; color: white; } /* Carousel */
+
+input {
+  width: 100%;
+  max-width: 300px;
+  margin: 10px 0;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.actions p {
+  cursor: pointer;
+  color: #3498db;
+  text-decoration: underline;
+  margin-top: 15px;
+}

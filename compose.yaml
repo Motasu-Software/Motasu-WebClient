@@ -5,6 +5,6 @@ services:
     container_name: motasu-web-${DEPLOY_ENV}
     restart: unless-stopped
     ports:
-      # On bind uniquement en local.
-      # Le conteneur écoute sur 80, on le mappe sur HOST_PORT sur la VM
       - "127.0.0.1:${HOST_PORT}:80"
+    volumes:
+      - ./config/config.json:/usr/share/nginx/html/assets/config.json:ro

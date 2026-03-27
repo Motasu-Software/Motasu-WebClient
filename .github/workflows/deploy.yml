@@ -96,8 +96,9 @@ jobs:
       - name: Définir les variables d'environnement
         run: |
           IMG_TAG="dev"
-          PORT="3001" # Port pour Angular en Dev
-          ENV_NAME="dev-web" # Dossier cible sur la VM
+          PORT="3001" 
+          ENV_NAME="dev-web" 
+          API_URL="https://api-motasu-dev.corentinkorohrichard.fr"
 
           # Cas Release / Prod
           if [[ "${{ github.event_name }}" == "release" ]]; then
@@ -105,7 +106,8 @@ jobs:
             IMG_TAG="${RAW_TAG#v}"
             PORT="8081" # Port pour Angular en Prod
             ENV_NAME="production-web" # Dossier cible sur la VM
-          fi
+            API_URL="https://api-motasu.corentinkorohrichard.fr/graphql"
+            fi
 
           # Cas Manuel
           if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
@@ -114,9 +116,11 @@ jobs:
             if [[ "$TARGET" == "production-web" ]]; then
                IMG_TAG="latest"
                PORT="8081"
+               API_URL="https://api-motasu.corentinkorohrichard.fr/graphql"
             else
                IMG_TAG="dev"
                PORT="3001"
+               API_URL="https://api-motasu-dev.corentinkorohrichard.fr/graphql"
             fi
           fi
 
@@ -126,6 +130,7 @@ jobs:
           echo "DEPLOY_ENV=$ENV_NAME" >> $GITHUB_ENV
           echo "HOST_PORT=$PORT" >> $GITHUB_ENV
           echo "FULL_IMAGE_NAME=$FULL_IMAGE" >> $GITHUB_ENV
+          echo "API_URL=$API_URL" >> $GITHUB_ENV
 
       - name: Copy docker-compose to server
         uses: appleboy/scp-action@v0.1.7
@@ -144,15 +149,20 @@ jobs:
           DEPLOY_ENV: ${{ env.DEPLOY_ENV }}
           HOST_PORT: ${{ env.HOST_PORT }}
           FULL_IMAGE_NAME: ${{ env.FULL_IMAGE_NAME }}
+          API_URL: ${{ env.API_URL }}
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
-          envs: GH_TOKEN,USERNAME,DEPLOY_ENV,HOST_PORT,FULL_IMAGE_NAME
+          envs: GH_TOKEN,USERNAME,DEPLOY_ENV,HOST_PORT,FULL_IMAGE_NAME,API_URL
           script: |
             echo $GH_TOKEN | docker login ghcr.io -u $USERNAME --password-stdin
 
             cd /home/${{ secrets.SSH_USERNAME }}/deployments/$DEPLOY_ENV
+
+            mkdir -p config
+
+            echo "{\"apiUrl\": \"$FINAL_API_URL\"}" > config/config.json
 
             export FULL_IMAGE_NAME=$FULL_IMAGE_NAME
             export DEPLOY_ENV=$DEPLOY_ENV

@@ -1,0 +1,33 @@
+<div class="viewport">
+  <form [formGroup]="authForm" (ngSubmit)="onSubmit()" 
+        class="sliding-track" 
+        [class.register-state]="isRegisterMode">
+    
+    <section class="panel panel-1">
+      <h2>Créer un compte</h2>
+      <input type="text" formControlName="username" placeholder="Nom d'utilisateur">
+      <input type="text" formControlName="iRacingCode" placeholder="Code iRacing">
+    </section>
+
+    <section class="panel panel-2">
+      <h2>{{ isRegisterMode ? 'Finaliser' : 'Connexion' }}</h2>
+      <input type="email" formControlName="email" placeholder="Email">
+      <input type="password" formControlName="password" placeholder="Mot de passe">
+      
+      <div class="actions">
+        <button type="submit">{{ isRegisterMode ? 'S\'inscrire' : 'Se connecter' }}</button>
+        <p (click)="toggleMode()">
+          {{ isRegisterMode ? 'Déjà un compte ? Login' : 'Pas de compte ? Register' }}
+        </p>
+      </div>
+    </section>
+
+    <section class="panel panel-3">
+      <div class="carousel-placeholder">
+        <h3>Bienvenue !</h3>
+        <p>Découvrez nos fonctionnalités...</p>
+      </div>
+    </section>
+
+  </form>
+</div>
