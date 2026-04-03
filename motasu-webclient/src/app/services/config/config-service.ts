@@ -21,6 +21,10 @@ export class ConfigService {
     );
   }
 
+  getConfig(): any {
+    return this.config || {};
+  }
+
   get apiUrl(): string {
     return this.config?.apiUrl;
   }

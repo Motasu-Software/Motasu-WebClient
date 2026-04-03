@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { FormGroup, ReactiveFormsModule, FormBuilder } from '@angular/forms';
 
 
@@ -13,6 +13,9 @@ import { FormGroup, ReactiveFormsModule, FormBuilder } from '@angular/forms';
 export class AuthContainer {
   authForm: FormGroup;
   isRegisterMode: boolean = false;
+
+  private slideInterval: any;
+  currentSlideIndex = signal(0);
   
   constructor(private fb: FormBuilder) {
     this.authForm = this.fb.group({
@@ -33,6 +36,22 @@ export class AuthContainer {
 
     }else{
       console.log('Logging in user with data:', this.authForm.value);
+    }
+  }
+
+  ngOnInit() {
+    this.startCarousel();
+  }
+
+  startCarousel() {
+    this.slideInterval = setInterval(() => {
+      this.currentSlideIndex.update(index => (index + 1) % 3);
+    }, 3000);
+  }
+
+  ngOnDestroy() {
+    if (this.slideInterval) {
+      clearInterval(this.slideInterval);
     }
   }
 }

@@ -1,0 +1,76 @@
+/* Importation des polices Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100..900;1,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Rajdhani:wght@300;400;500;600;700&display=swap');
+
+/* Palette Coolors [cite: 7] */
+:root {
+  /* Mode Clair */
+  --bg-app: #f4f7f6;
+  --bg-panel: #ffffff;
+  --text-main: #1B1F17;    /* [cite: 6] */
+  --text-muted: #7D6D61;   /* [cite: 5] */
+  --primary: #02C3F7;      /* [cite: 3] */
+  --accent: #98E909;       /* [cite: 2] */
+  --border: #e0e0e0;
+
+  /* Attribution des polices aux variables */
+  --font-title: 'Rajdhani', sans-serif;
+  --font-body: 'Exo 2', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+body.dark-theme {
+  /* Mode Sombre */
+  --bg-app: #0B2647;       /* [cite: 4] */
+  --bg-panel: #1B1F17;     /* [cite: 6] */
+  --text-main: #ffffff;
+  --text-muted: #7D6D61;   /* [cite: 5] */
+  --primary: #02C3F7;      /* [cite: 3] */
+  --accent: #98E909;       /* [cite: 2] - Gardé en Lime pour le contraste sur Marine/Noir */
+  --border: #2c3e50;
+}
+
+/* RESET ET VERROUILLAGE HIERARCHIQUE */
+html, body, app-root {
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  overflow: hidden !important; 
+  display: block;
+  position: relative;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-body); /* Police par défaut : Exo 2 */
+  background-color: var(--bg-app);
+  color: var(--text-main);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Application des polices spécifiques */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-title);
+  text-transform: uppercase; /* Rajdhani rend très bien en majuscules */
+  letter-spacing: 1px;
+}
+
+code, pre, .mono-detail {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+}
+
+button {
+  font-family: var(--font-title);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+input {
+  font-family: var(--font-body);
+}

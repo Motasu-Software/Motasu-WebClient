@@ -1,53 +1,109 @@
 .viewport {
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden; /* Cache ce qui dépasse de l'écran */
-  background: #f0f2f5;
+  width: 100%;
+  height: 100%;
+  overflow: hidden; /* Double sécurité */
+  position: absolute; /* Fixe le composant aux bords de l'app-root */
+  top: 0;
+  left: 0;
 }
 
 .sliding-track {
   display: flex;
-  width: 150vw; /* 3 panneaux x 50vw */
-  height: 100%;
-  transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1);
-  
-  /* État initial (Login) : On décale pour voir Panneau 2 et 3 */
-  /* On recule de 50vw pour que le Panneau 2 soit à gauche de l'écran */
-  transform: translateX(-50vw); 
+  width: 150vw; 
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  transition: transform 0.7s cubic-bezier(0.65, 0, 0.35, 1);
+  will-change: transform;
+  transform: translateX(-50vw); /* Login par défaut */
 }
 
-/* État Register : On revient à 0 pour voir Panneau 1 et 2 */
-.register-state {
+.sliding-track.register-state {
   transform: translateX(0);
 }
 
 .panel {
+  padding: 0;
+  /* flex: 0 0 50vw; Largeur strictement bloquée à 50% de l'écran */
   width: 50vw;
-  height: 100%;
+  height: 100vh;
+  padding: 2rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 40px;
-  box-sizing: border-box;
+  background-color: var(--bg-panel);
+  border-right: 1px solid var(--border);
 }
 
-.panel-1 { background: #ffffff; } /* Register extra */
-.panel-2 { background: #ffffff; border-left: 1px solid #eee; } /* Login/Common */
-.panel-3 { background: #2c3e50; color: white; } /* Carousel */
+.panel-3 {
+  padding: 0;
+  border-right: none;
+  background-color: var(--bg-app);
+  position: relative;
+}
+
+/* CARROUSEL */
+.carousel-placeholder {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.authSlide, .authSlide img {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  object-fit: cover;
+}
+
+h2 {
+  font-family: var(--font-title); 
+  color: var(--primary);          
+}
+
+
+input[formControlName="iRacingCode"] {
+
+  text-transform: uppercase;
+
+}
 
 input {
+  font-family: var(--font-mono); 
+  letter-spacing: 1px;
+  font-weight: 500;
   width: 100%;
-  max-width: 300px;
-  margin: 10px 0;
+  max-width: 350px;
   padding: 12px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  margin-bottom: 15px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--border);
+  color: var(--text-main);
+}
+
+button {
+  width: 100%;
+  font-family: var(--font-title); 
+  max-width: 350px;
+  padding: 14px;
+  background: var(--accent);
+  color: #1B1F17;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  
 }
 
 .actions p {
-  cursor: pointer;
-  color: #3498db;
-  text-decoration: underline;
   margin-top: 15px;
+  cursor: pointer;
+  color: var(--text-muted);
 }
+
+.fade { animation: fade 1.5s ease; }
+@keyframes fade { from { opacity: 0.4; } to { opacity: 1; } }
