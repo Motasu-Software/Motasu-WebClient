@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, signal, OnInit, OnDestroy } from '@angular/core';
+import { Component, signal, OnInit, OnDestroy, inject, effect } from '@angular/core';
 import { FormGroup, ReactiveFormsModule, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthFacade } from '../../services/auth/auth.facade';
+import { UserService } from '../../services/user/user.service';
 
 @Component({
   selector: 'app-auth-container',
@@ -19,6 +20,7 @@ export class AuthContainer implements OnInit, OnDestroy {
 
   private slideInterval: any;
   currentSlideIndex = signal(0);
+  private userService = inject(UserService);
 
   constructor(
     private fb: FormBuilder,
@@ -31,6 +33,18 @@ export class AuthContainer implements OnInit, OnDestroy {
       iRacingCode: new FormControl(''),
       email: new FormControl(''),
       password: new FormControl('')
+    });
+
+    // Vérifier après initialisation si l'utilisateur est déjà connecté
+    // Si oui → rediriger vers l'accueil
+    effect(() => {
+      if (this.userService.isInitialized()) {
+        console.log('🔓 AuthContainer: UserService initialized');
+        if (this.userService.isLoggedIn()) {
+          console.log('🔓 AuthContainer: Already logged in, redirecting to home');
+          this.router.navigate(['/']);
+        }
+      }
     });
   }
 
