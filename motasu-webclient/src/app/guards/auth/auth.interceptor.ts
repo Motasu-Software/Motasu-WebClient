@@ -8,7 +8,7 @@ import {
 } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { UserService } from '../services/user/user.service';
+import { UserService } from '../../services/user/user.service';
 import { Router } from '@angular/router';
 
 @Injectable()
@@ -21,7 +21,6 @@ export class AuthInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<any>> {
     const token = this.userService.getToken();
 
-    // Add JWT token to request headers if available
     if (token) {
       request = request.clone({
         setHeaders: {

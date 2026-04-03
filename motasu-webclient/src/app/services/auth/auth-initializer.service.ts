@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { UserService } from './user/user.service';
+import { UserService } from '../user/user.service';
 import { JwtService } from './jwt.service';
 import { firstValueFrom } from 'rxjs';
-import { ConfigService } from './config/config-service';
+import { ConfigService } from '../config/config-service';
 
 @Injectable({
   providedIn: 'root',

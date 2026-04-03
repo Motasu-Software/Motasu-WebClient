@@ -1,11 +1,13 @@
-import { Injectable, effect } from '@angular/core';
-import { signal } from '@angular/core';
+import { Injectable, afterNextRender, effect, PLATFORM_ID, inject, signal } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { User } from '../../model/user.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
+  private platformId = inject(PLATFORM_ID);
+  
   currentUser = signal<User | null>(null);
   authToken = signal<string | null>(null);
   isLoading = signal(false);
@@ -14,37 +16,44 @@ export class UserService {
   private readonly TOKEN_STORAGE_KEY = 'authToken';
 
   constructor() {
-    this.initializeFromStorage();
+    // 1. Chargement initial (Uniquement au premier rendu navigateur)
+    afterNextRender(() => {
+      this.initializeFromStorage();
+    });
 
-    // Sync user to localStorage
+    // 2. Synchronisation Utilisateur
     effect(() => {
       const user = this.currentUser();
-      if (user) {
-        localStorage.setItem(this.USER_STORAGE_KEY, JSON.stringify(user));
-      } else {
-        localStorage.removeItem(this.USER_STORAGE_KEY);
+      // On vérifie qu'on est sur le navigateur AVANT de toucher au localStorage
+      if (isPlatformBrowser(this.platformId)) {
+        if (user) {
+          localStorage.setItem(this.USER_STORAGE_KEY, JSON.stringify(user));
+        } else {
+          localStorage.removeItem(this.USER_STORAGE_KEY);
+        }
       }
     });
 
-    // Sync token to localStorage
+    // 3. Synchronisation Token
     effect(() => {
       const token = this.authToken();
-      if (token) {
-        localStorage.setItem(this.TOKEN_STORAGE_KEY, token);
-      } else {
-        localStorage.removeItem(this.TOKEN_STORAGE_KEY);
+      if (isPlatformBrowser(this.platformId)) {
+        if (token) {
+          localStorage.setItem(this.TOKEN_STORAGE_KEY, token);
+        } else {
+          localStorage.removeItem(this.TOKEN_STORAGE_KEY);
+        }
       }
     });
   }
 
-  // Charger l'utilisateur et le token depuis localStorage au démarrage
   private initializeFromStorage(): void {
+    // Ici, on est déjà dans afterNextRender, donc localStorage est garanti
     const storedUser = localStorage.getItem(this.USER_STORAGE_KEY);
     if (storedUser) {
       try {
         this.currentUser.set(JSON.parse(storedUser));
       } catch (e) {
-        console.error('Erreur parsing utilisateur stocké:', e);
         localStorage.removeItem(this.USER_STORAGE_KEY);
       }
     }

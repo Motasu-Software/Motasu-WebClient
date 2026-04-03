@@ -5,20 +5,61 @@
     class="sliding-track"
     [class.register-state]="isRegisterMode"
   >
+    <!-- 🔴 Message d'erreur -->
+    <div *ngIf="errorMessage" class="error-message" style="
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #ff4444;
+      color: white;
+      padding: 15px 20px;
+      border-radius: 5px;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    ">
+      {{ errorMessage }}
+    </div>
+
     <section class="panel panel-1">
       <h2>Créer un compte</h2>
-      <input type="text" formControlName="username" placeholder="Nom d'utilisateur" />
-      <input type="text" formControlName="iRacingCode" placeholder="Code iRacing" />
+      <input
+        type="text"
+        formControlName="username"
+        placeholder="Nom d'utilisateur"
+      />
+      <input
+        type="text"
+        formControlName="iRacingCode"
+        placeholder="Code iRacing"
+      />
     </section>
 
     <section class="panel panel-2">
       <h2>{{ isRegisterMode ? 'Finaliser' : 'Connexion' }}</h2>
-      <input type="email" formControlName="email" placeholder="Email" />
-      <input type="password" formControlName="password" placeholder="Mot de passe" />
+      <input
+        type="email"
+        formControlName="email"
+        placeholder="Email"
+      />
+      <input
+        type="password"
+        formControlName="password"
+        placeholder="Mot de passe"
+      />
 
       <div class="actions">
-        <button type="submit">{{ isRegisterMode ? "S'inscrire" : 'Se connecter' }}</button>
-        <p (click)="toggleMode()">
+        <button
+          type="submit"
+          [disabled]="isLoading()"
+          style="
+            opacity: {{ isLoading() ? 0.6 : 1 }};
+            cursor: {{ isLoading() ? 'not-allowed' : 'pointer' }};
+          "
+        >
+          {{ isLoading() ? '⏳ Chargement...' : (isRegisterMode ? "S'inscrire" : 'Se connecter') }}
+        </button>
+        <p (click)="toggleMode()" style="cursor: pointer; opacity: {{ isLoading() ? 0.6 : 1 }};">
           {{ isRegisterMode ? 'Déjà un compte ? Login' : 'Pas de compte ? Register' }}
         </p>
       </div>

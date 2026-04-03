@@ -6,12 +6,12 @@ import { InjectionToken } from '@angular/core';
 import { routes } from './app.routes';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { provideApollo } from 'apollo-angular';
-import { provideHttpClient, withInterceptors, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { provideHttpClient, withInterceptors, HTTP_INTERCEPTORS, withFetch } from '@angular/common/http';
 import { InMemoryCache } from '@apollo/client';
 import { HttpLink } from 'apollo-angular/http';
 import { ConfigService } from './services/config/config-service';
-import { AuthInitializerService } from './services/auth-initializer.service';
-import { AuthInterceptor } from './auth.interceptor';
+import { AuthInitializerService } from './services/auth/auth-initializer.service';
+import { AuthInterceptor } from './guards/auth/auth.interceptor';
 
 export const AUTH_STRATEGY = new InjectionToken<AuthStrategy>('AuthStrategy');
 
@@ -51,7 +51,7 @@ export const appConfig: ApplicationConfig = {
       multi: true
     },
     provideBrowserGlobalErrorListeners(),
-    provideHttpClient(),
+    provideHttpClient(withFetch()),
     provideRouter(routes),
     provideClientHydration(withEventReplay())
   ]

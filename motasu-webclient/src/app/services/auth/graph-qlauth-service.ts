@@ -22,30 +22,29 @@ const LOGIN_MUTATION = gql`
 export class GraphQLAuthService implements AuthStrategy {
   constructor(private apollo: Apollo, private userService: UserService) {}
 
-  login(login: string, password: string): Observable<any> {
+  login(email: string, password: string): Observable<User> {
     return this.apollo.mutate({
       mutation: LOGIN_MUTATION,
-      variables: { email: login, password },
+      variables: { email, password },
     }).pipe(
-      map((result: any) => result.data.logIn),
-      tap((response: any) => {
+      map((result: any) => {
+        const response = result.data.logIn;
         if (response && response.token && response.user) {
           const user: User = {
             id: response.user.id,
             email: response.user.email,
             username: response.user.email.split('@')[0],
           };
+          
           this.userService.setUser(user, response.token);
+          return user;
         }
+        throw new Error('Invalid response from server');
       })
     );
   }
 
   logout(): Observable<any> {
-    throw new Error('Method not implemented.');
-  }
-
-  isAuthenticated(): Observable<boolean> {
     throw new Error('Method not implemented.');
   }
 
