@@ -54,13 +54,18 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Lowercase image name
+        run: |
+          echo "IMAGE_NAME_LOWER=$(echo ${{ env.IMAGE_NAME }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
           
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWER }}
           tags: |
+            type=raw,value=${{ github.ref_name }}
             type=raw,value=dev,enable=${{ github.ref == 'refs/heads/main' }}
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
@@ -162,7 +167,7 @@ jobs:
 
             mkdir -p config
 
-            echo "{\"apiUrl\": \"$FINAL_API_URL\"}" > config/config.json
+            echo "{\"apiUrl\": \"$API_URL\"}" > config/config.json
 
             export FULL_IMAGE_NAME=$FULL_IMAGE_NAME
             export DEPLOY_ENV=$DEPLOY_ENV
