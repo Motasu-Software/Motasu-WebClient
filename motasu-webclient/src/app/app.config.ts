@@ -34,10 +34,7 @@ export const appConfig: ApplicationConfig = {
       const httpLink = inject(HttpLink);
       const configService = inject(ConfigService);
 
-      let baseApiUrl = configService.getConfig()?.apiUrl || 'http://localhost:4000/graphql';
-      if (!baseApiUrl.endsWith('/graphql')) {
-        baseApiUrl = `${baseApiUrl.replace(/\/+$/, '')}/graphql`;
-      }
+      let baseApiUrl = configService.getConfig()?.apiUrl || 'http://localhost:4000/';
       return {
         link: httpLink.create({ uri: baseApiUrl }),
         cache: new InMemoryCache(),
