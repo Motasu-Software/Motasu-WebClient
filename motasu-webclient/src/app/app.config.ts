@@ -32,8 +32,14 @@ export const appConfig: ApplicationConfig = {
     { provide: AUTH_STRATEGY, useClass: GraphQLAuthService },
     provideApollo(() => {
       const httpLink = inject(HttpLink);
+      const configService = inject(ConfigService);
+
+      let baseApiUrl = configService.getConfig()?.apiUrl || 'http://localhost:4000/graphql';
+      if (!baseApiUrl.endsWith('/graphql')) {
+        baseApiUrl = `${baseApiUrl.replace(/\/+$/, '')}/graphql`;
+      }
       return {
-        link: httpLink.create({ uri: 'http://localhost:4000/graphql' }),
+        link: httpLink.create({ uri: baseApiUrl }),
         cache: new InMemoryCache(),
       };
     }),
