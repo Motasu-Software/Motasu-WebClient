@@ -2,22 +2,21 @@ import { inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { CanActivateFn, Router } from '@angular/router';
 import { UserService } from '../../services/user/user.service';
-import { JwtService } from '../../services/auth/jwt.service';
 
 export const authGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
   const userService = inject(UserService);
   const platformId = inject(PLATFORM_ID);
   
+  // Laisse passer la requête côté serveur (SSR) pour éviter de bloquer le rendu
   if (!isPlatformBrowser(platformId)) {
     return true; 
   }
 
-  const token = userService.getToken();
-  if (!token || !inject(JwtService).isTokenValid(token)) {
-    userService.clearUser();
-    return router.createUrlTree(['/auth']); // Utilise createUrlTree pour les Guards
+  // Vérifie simplement si un utilisateur est connecté en mémoire
+  if (!userService.isLoggedIn()) {
+    return router.createUrlTree(['/auth']); // Redirection propre vers la page de login
   }
 
-  return true;
+  return true; // L'utilisateur est connecté, on le laisse accéder à la route
 };
