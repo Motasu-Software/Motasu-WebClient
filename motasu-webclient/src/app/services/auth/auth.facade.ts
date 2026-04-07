@@ -5,7 +5,6 @@ import { tap, catchError } from 'rxjs/operators';
 import { AuthStrategy } from './auth-strategy.interface';
 import { AUTH_STRATEGY } from '../../app.config';
 import { UserService } from '../user/user.service';
-import { JwtService } from './jwt.service';
 import { User } from '../../model/user.model';
 
 @Injectable({
@@ -21,13 +20,11 @@ export class AuthFacade {
   constructor(
     @Inject(AUTH_STRATEGY) private authStrategy: AuthStrategy,
     private userService: UserService,
-    private jwtService: JwtService,
     private router: Router
   ) {}
 
   /**
    * Connexion avec email et password
-   * Utilise l'interface AuthStrategy pour permettre des implémentations différentes
    */
   login(email: string, password: string): Observable<User> {
     this.loadingSubject.next(true);
@@ -43,13 +40,11 @@ export class AuthFacade {
       catchError((error: any) => {
         this.loadingSubject.next(false);
         
-        // Traiter différents types d'erreurs
         let errorMessage = 'Erreur de connexion';
         
         if (error?.message) {
           errorMessage = error.message;
         } else if (error?.graphQLErrors?.[0]?.message) {
-          // Erreur GraphQL
           errorMessage = error.graphQLErrors[0].message;
         } else if (typeof error === 'string') {
           errorMessage = error;
@@ -67,75 +62,43 @@ export class AuthFacade {
    * Déconnexion
    */
   logout(): void {
+    // Note : Idéalement, tu devrais aussi appeler this.authStrategy.logout() 
+    // pour que ton backend supprime le cookie HttpOnly (ex: en mettant sa date d'expiration à 0).
+    this.authStrategy.logout('').subscribe({
+      next: () => {
+        console.log('✅ Logout API call successful');
+      },
+      error: (error) => {
+        console.warn('⚠️ Logout API call failed, but proceeding with client-side logout', error);
+      }
+    });
     this.userService.clearUser();
     this.errorSubject.next(null);
     this.router.navigate(['/auth']);
     console.log('✅ Déconnexion réussie');
   }
 
-  /**
-   * Récupérer l'utilisateur courant (Signal réactif)
-   */
   getCurrentUser() {
     return this.userService.currentUser();
   }
 
-  /**
-   * Signal réactif pour observer les changements d'utilisateur
-   */
   get currentUser$() {
     return this.userService.currentUser;
   }
 
-  /**
-   * Vérifier si connecté
-   */
   isLoggedIn(): boolean {
     return this.userService.isLoggedIn();
   }
 
-  /**
-   * Récupérer le token
-   */
-  getToken(): string | null {
-    return this.userService.getToken();
-  }
-
-  /**
-   * Vérifier si le token est valide
-   */
-  isTokenValid(): boolean {
-    const token = this.userService.getToken();
-    return token ? this.jwtService.isTokenValid(token) : false;
-  }
-
-  /**
-   * Obtenir le temps avant expiration du token (en secondes)
-   */
-  getTimeUntilTokenExpiry(): number | null {
-    const token = this.userService.getToken();
-    return token ? this.jwtService.getTimeUntilExpiry(token) : null;
-  }
-
-  /**
-   * Récupérer l'état actuel du chargement
-   */
   isLoading(): boolean {
     return this.loadingSubject.value;
   }
 
-  /**
-   * Récupérer le message d'erreur actuel
-   */
   getError(): string | null {
     return this.errorSubject.value;
   }
 
-  /**
-   * Effacer le message d'erreur
-   */
   clearError(): void {
     this.errorSubject.next(null);
   }
 }
-

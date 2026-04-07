@@ -19,19 +19,14 @@ export class AuthInterceptor implements HttpInterceptor {
     request: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    const token = this.userService.getToken();
-
-    if (token) {
-      request = request.clone({
-        setHeaders: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-    }
+    
+    request = request.clone({
+      withCredentials: true
+    });
 
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {
-        // If 401 Unauthorized, clear user and redirect to auth
+        // Si 401 Unauthorized (le cookie est expiré, invalide ou absent)
         if (error.status === 401) {
           this.userService.clearUser();
           this.router.navigate(['/auth']);

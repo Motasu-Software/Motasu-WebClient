@@ -36,7 +36,10 @@ export const appConfig: ApplicationConfig = {
 
       let baseApiUrl = configService.getConfig()?.apiUrl || 'http://localhost:4000/';
       return {
-        link: httpLink.create({ uri: baseApiUrl }),
+        link: httpLink.create({ 
+          uri: baseApiUrl,
+          withCredentials: true 
+        }),
         cache: new InMemoryCache(),
       };
     }),
