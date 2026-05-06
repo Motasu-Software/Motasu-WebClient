@@ -1,1 +1,53 @@
-<p>home-component works!</p>
+<div class="home-shell">
+  <nav class="home-toolbar">
+    <div class="toolbar-item">Accueil</div>
+    <button class="toolbar-add" type="button" (click)="goToCreatePost()">+ Nouveau post</button>
+    <div class="toolbar-item">Fil d'actualité</div>
+  </nav>
+
+  <section class="feed-section">
+    <div class="feed-header">
+      <div>
+        <h1>Fil d'actualité</h1>
+        <p>Les derniers posts de la communauté.</p>
+      </div>
+      <button class="feed-add-button" type="button" (click)="goToCreatePost()">Créer un post</button>
+    </div>
+
+    <div *ngIf="isLoading()" class="feed-state">Chargement des posts...</div>
+    <div *ngIf="errorMessage()" class="feed-error">{{ errorMessage() }}</div>
+    <div *ngIf="!isLoading() && !errorMessage() && posts().length === 0" class="feed-empty">
+      Aucun post créé pour le moment.
+    </div>
+
+    <div class="posts-grid">
+      <article class="post-card" *ngFor="let post of posts(); trackBy: trackByPost">
+        <header>
+          <h2>{{ post.title }}</h2>
+          <span class="post-meta">{{ post.circuit }} · {{ post.car }} · {{ post.lapTime }}</span>
+        </header>
+        <p>{{ post.description }}</p>
+        <footer>
+          <span>par {{ post.authorEmail || 'Anonyme' }}</span>
+          <span>{{ post.createdAt | date:'short' }}</span>
+        </footer>
+      </article>
+    </div>
+
+    <div class="pagination" *ngIf="totalPages() > 1">
+      <button
+        type="button"
+        [disabled]="currentPage() === 1"
+        (click)="loadPosts(currentPage() - 1)">
+        Précédent
+      </button>
+      <span>Page {{ currentPage() }} / {{ totalPages() }}</span>
+      <button
+        type="button"
+        [disabled]="currentPage() === totalPages()"
+        (click)="loadPosts(currentPage() + 1)">
+        Suivant
+      </button>
+    </div>
+  </section>
+</div>

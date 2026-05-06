@@ -1,0 +1,42 @@
+<div class="page-shell">
+  <header class="create-post-header">
+    <h1>Créer un nouveau post</h1>
+    <p>Partage ton meilleur tour, ton circuit et ta voiture.</p>
+  </header>
+
+  <form [formGroup]="postForm" (ngSubmit)="submitForm()" class="create-post-form">
+    <div class="field-group">
+      <label>Titre</label>
+      <input type="text" formControlName="title" placeholder="Titre du post" />
+    </div>
+
+    <div class="field-group">
+      <label>Description</label>
+      <textarea formControlName="description" rows="5" placeholder="Décris ton run"></textarea>
+    </div>
+
+    <div class="grid-row">
+      <div class="field-group">
+        <label>Circuit</label>
+        <input type="text" formControlName="circuit" placeholder="Circuit" />
+      </div>
+      <div class="field-group">
+        <label>Voiture</label>
+        <input type="text" formControlName="car" placeholder="Voiture" />
+      </div>
+      <div class="field-group">
+        <label>Lap time</label>
+        <input type="text" formControlName="lapTime" placeholder="1:23.456" />
+      </div>
+    </div>
+
+    <div *ngIf="errorMessage()" class="form-error">{{ errorMessage() }}</div>
+
+    <div class="actions-row">
+      <button type="button" class="secondary-button" (click)="cancel()">Annuler</button>
+      <button type="submit" [disabled]="isLoading()" class="primary-button">
+        {{ isLoading() ? 'Création...' : 'Publier' }}
+      </button>
+    </div>
+  </form>
+</div>
