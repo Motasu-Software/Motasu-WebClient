@@ -21,9 +21,13 @@ export function initializeApp(
   authInitializer: AuthInitializerService
 ) {
   return async () => {
+    console.log('🚀 Initializing application...');
     await configService.loadConfig();
+    console.log('🚀 Configuration loaded, initializing authentication...');
     userService.initSynchronously();
+    console.log('🚀 UserService initialized, verifying authentication...');
     await authInitializer.initialize();
+      console.log('🚀 Authentication verification completed, application initialized');
   };
 }
 
@@ -34,10 +38,9 @@ export const appConfig: ApplicationConfig = {
       const httpLink = inject(HttpLink);
       const configService = inject(ConfigService);
 
-      let baseApiUrl = configService.getConfig()?.apiUrl || 'http://localhost:4000/';
-      return {
+    return {
         link: httpLink.create({ 
-          uri: baseApiUrl,
+          uri: () => configService.getConfig()?.apiUrl || 'http://localhost:4000/',
           withCredentials: true 
         }),
         cache: new InMemoryCache(),

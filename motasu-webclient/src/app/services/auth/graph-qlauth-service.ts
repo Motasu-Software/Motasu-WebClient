@@ -12,8 +12,6 @@ const LOGIN_MUTATION = gql`
         email
         id
       }
-      # Tu peux retirer 'token' de la query si ton backend gère 100% le cookie,
-      # ou le garder si tu en as besoin pour autre chose.
     }
   }`;
 
