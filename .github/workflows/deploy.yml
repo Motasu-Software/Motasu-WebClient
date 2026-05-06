@@ -109,9 +109,9 @@ jobs:
           if [[ "${{ github.event_name }}" == "release" ]]; then
             RAW_TAG="${{ github.ref_name }}"
             IMG_TAG="${RAW_TAG#v}"
-            PORT="8081" # Port pour Angular en Prod
-            ENV_NAME="production-web" # Dossier cible sur la VM
-            API_URL="https://api-motasu.corentinkorohrichard.fr/graphql"
+            PORT="8081" 
+            ENV_NAME="production-web" 
+            API_URL="https://api-motasu.corentinkorohrichard.fr"
             fi
 
           # Cas Manuel
@@ -121,11 +121,11 @@ jobs:
             if [[ "$TARGET" == "production-web" ]]; then
                IMG_TAG="latest"
                PORT="8081"
-               API_URL="https://api-motasu.corentinkorohrichard.fr/graphql"
+               API_URL="https://api-motasu.corentinkorohrichard.fr"
             else
                IMG_TAG="dev"
                PORT="3001"
-               API_URL="https://api-motasu-dev.corentinkorohrichard.fr/graphql"
+               API_URL="https://api-motasu-dev.corentinkorohrichard.fr"
             fi
           fi
 
