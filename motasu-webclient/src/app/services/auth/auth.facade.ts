@@ -59,23 +59,38 @@ export class AuthFacade {
   }
 
   /**
-   * Déconnexion
+   * Inscription avec username, email et password
    */
-  logout(): void {
-    // Note : Idéalement, tu devrais aussi appeler this.authStrategy.logout() 
-    // pour que ton backend supprime le cookie HttpOnly (ex: en mettant sa date d'expiration à 0).
-    this.authStrategy.logout('').subscribe({
-      next: () => {
-        console.log('✅ Logout API call successful');
-      },
-      error: (error) => {
-        console.warn('⚠️ Logout API call failed, but proceeding with client-side logout', error);
-      }
-    });
-    this.userService.clearUser();
+  register(username: string, email: string, password: string): Observable<void> {
+    this.loadingSubject.next(true);
     this.errorSubject.next(null);
-    this.router.navigate(['/auth']);
-    console.log('✅ Déconnexion réussie');
+
+    console.log('📝 Tentative d\'inscription pour:', email);
+
+    return this.authStrategy.register(username, email, password).pipe(
+      tap(() => {
+        this.loadingSubject.next(false);
+        console.log('✅ Inscription réussie pour:', email);
+      }),
+      catchError((error: any) => {
+        this.loadingSubject.next(false);
+        
+        let errorMessage = 'Erreur d\'inscription';
+        
+        if (error?.message) {
+          errorMessage = error.message;
+        } else if (error?.graphQLErrors?.[0]?.message) {
+          errorMessage = error.graphQLErrors[0].message;
+        } else if (typeof error === 'string') {
+          errorMessage = error;
+        }
+
+        console.error('❌ Erreur register:', errorMessage, error);
+        this.errorSubject.next(errorMessage);
+        
+        return throwError(() => new Error(errorMessage));
+      })
+    );
   }
 
   getCurrentUser() {

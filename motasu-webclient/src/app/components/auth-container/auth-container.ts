@@ -99,9 +99,8 @@ export class AuthContainer implements OnInit, OnDestroy {
     }
 
     if (this.isRegisterMode) {
-      // TODO: Implémenter l'enregistrement
-      this.errorMessage = 'Enregistrement non encore implémenté';
-      console.log('Registering user with data:', this.authForm.value);
+      // 📝 REGISTER - Inscription
+      this.registerUser();
     } else {
       // 🎯 LOGIN - Une seule méthode
       this.loginUser();
@@ -155,6 +154,33 @@ export class AuthContainer implements OnInit, OnDestroy {
       error: (error) => {
         console.error('❌ Erreur de connexion:', error);
         this.errorMessage = error.message || 'Erreur de connexion';
+        this.isLoading.set(false);
+        // Réactiver les controls pour que l'utilisateur puisse réessayer
+        this.enableAllControls();
+      }
+    });
+  }
+
+  private registerUser() {
+    const { username, email, password } = this.authForm.value;
+    this.isLoading.set(true);
+    this.errorMessage = null;
+
+    // 🔒 Désactiver tous les inputs à partir du FormControl (pas du HTML)
+    this.disableAllControls();
+
+    this.authFacade.register(username, email, password).subscribe({
+      next: () => {
+        console.log('✅ Inscrit en tant que:', email);
+        this.isLoading.set(false);
+        // Réactiver les controls
+        this.enableAllControls();
+        // Redirection vers le dashboard après inscription
+        this.router.navigate(['/']);
+      },
+      error: (error) => {
+        console.error('❌ Erreur d\'inscription:', error);
+        this.errorMessage = error.message || 'Erreur d\'inscription';
         this.isLoading.set(false);
         // Réactiver les controls pour que l'utilisateur puisse réessayer
         this.enableAllControls();
