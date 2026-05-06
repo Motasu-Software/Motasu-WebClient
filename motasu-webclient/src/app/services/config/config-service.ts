@@ -1,21 +1,28 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { HttpClient, HttpBackend } from '@angular/common/http';
+import { isPlatformBrowser } from '@angular/common';
 import { firstValueFrom } from 'rxjs';
-import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class ConfigService {
   private config: any;
   private pureHttp: HttpClient;
 
- 
-  constructor(private handler: HttpBackend) {
-    
+  constructor(
+    private handler: HttpBackend,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {
     this.pureHttp = new HttpClient(this.handler);
   }
 
   loadConfig(): Promise<void> {
-    
+    if (!isPlatformBrowser(this.platformId)) {
+      this.config = {
+        apiUrl: process.env['API_URL'] || 'http://localhost:4000/'
+      };
+      return Promise.resolve();
+    }
+
     return firstValueFrom(this.pureHttp.get('/config/config.json'))
       .then(config => {
         this.config = config;
@@ -32,6 +39,6 @@ export class ConfigService {
   }
 
   get apiUrl(): string {
-    return this.config?.apiUrl;
+    return this.config?.apiUrl || 'http://localhost:4000/';
   }
 }

@@ -40,7 +40,7 @@ export const appConfig: ApplicationConfig = {
 
     return {
         link: httpLink.create({ 
-          uri: () => configService.getConfig()?.apiUrl || 'http://localhost:4000/',
+          uri: () => configService.apiUrl,
           withCredentials: true 
         }),
         cache: new InMemoryCache(),
