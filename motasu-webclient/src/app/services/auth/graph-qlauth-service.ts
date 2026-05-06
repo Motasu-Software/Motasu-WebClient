@@ -15,6 +15,17 @@ const LOGIN_MUTATION = gql`
     }
   }`;
 
+const SIGNUP_MUTATION = gql`
+  mutation SignUp($email: String!, $password: String!) {
+    signUp(email: $email, password: $password) {
+      token
+      user {
+        id
+        email
+      }
+    }
+  }`;
+
 const GET_ME = gql`
   query GetMe {
     me {
@@ -84,7 +95,26 @@ export class GraphQLAuthService implements AuthStrategy {
     throw new Error('Method not implemented.');
   }
 
-  register(email: string, password: string): Observable<any> {
-    throw new Error('Method not implemented.');
+  register(username: string, email: string, password: string): Observable<any> {
+    return this.apollo.mutate({
+      mutation: SIGNUP_MUTATION,
+      variables: { email, password },
+    }).pipe(
+      map((result: any) => {
+        const response = result.data.signUp;
+        if (response && response.user && response.token) {
+          const user: User = {
+            id: response.user.id,
+            email: response.user.email,
+            username: response.user.email.split('@')[0],
+          };
+          
+          // Le cookie est déjà défini par le navigateur à cette étape
+          this.userService.setUser(user);
+          return; // Return void as per interface
+        }
+        throw new Error('Invalid response from server');
+      })
+    );
   }
 }
