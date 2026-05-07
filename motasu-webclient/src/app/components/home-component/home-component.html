@@ -2,9 +2,21 @@
   <header class="app-header">
     <div class="header-content">
       <h1 class="brand" (click)="router.navigate(['/'])">Motasu</h1>
-      <button class="theme-toggle" (click)="toggleTheme()" type="button">
-        {{ themeService.isDark() ? '☀️' : '🌙' }}
-      </button>
+
+      <div class="header-actions">
+        <button class="theme-toggle" (click)="toggleTheme()" type="button" aria-label="Basculer thème">
+          {{ themeService.isDark() ? '☀️' : '🌙' }}
+        </button>
+
+        <div class="settings-menu">
+          <button class="settings-trigger" type="button" aria-label="Paramètres">
+            ⚙️
+          </button>
+          <div class="settings-dropdown">
+            <button type="button" class="menu-item" (click)="logout()">Se déconnecter</button>
+          </div>
+        </div>
+      </div>
     </div>
   </header>
 
@@ -26,14 +38,16 @@
     <div class="posts-grid">
       <article class="post-card" *ngFor="let post of posts(); trackBy: trackByPost">
         <header>
+          <div class="post-info">
+            <h2>{{ post.title }}</h2>
+            <span class="post-meta">{{ post.circuit }} · {{ post.car }} · {{ post.lapTime }}</span>
+          </div>
           <div class="post-menu" *ngIf="canDeletePost(post)">
             <button class="menu-trigger" type="button">⋯</button>
             <div class="menu-dropdown">
               <button type="button" class="menu-item delete" (click)="deletePost(post)">Supprimer</button>
             </div>
           </div>
-          <h2>{{ post.title }}</h2>
-          <span class="post-meta">{{ post.circuit }} · {{ post.car }} · {{ post.lapTime }}</span>
         </header>
         <p>{{ post.description }}</p>
         <footer>

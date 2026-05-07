@@ -1,7 +1,7 @@
 .profile-shell {
   min-height: 100vh;
-  background: linear-gradient(180deg, #020617 0%, #0f172a 100%);
-  color: #e2e8f0;
+  background: var(--bg-app);
+  color: var(--text-main);
 }
 
 .app-header {
@@ -10,9 +10,10 @@
   left: 0;
   right: 0;
   z-index: 1000;
-  background: rgba(15, 23, 42, 0.95);
+  background: var(--bg-panel);
   backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+  border-bottom: 1px solid var(--border);
+  color: var(--text-main);
 }
 
 .header-content {
@@ -29,17 +30,18 @@
   font-size: 1.5rem;
   font-weight: 700;
   cursor: pointer;
-  color: #38bdf8;
+  color: var(--primary);
 }
 
 .theme-toggle {
   background: none;
-  border: none;
+  border: 1px solid var(--border);
   font-size: 1.5rem;
   cursor: pointer;
   padding: 8px;
   border-radius: 8px;
   transition: background-color 0.2s;
+  color: var(--text-main);
 }
 
 .theme-toggle:hover {
