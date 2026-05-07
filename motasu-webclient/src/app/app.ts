@@ -1,5 +1,6 @@
 import { Component, signal, afterNextRender } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { ThemeService } from './services/theme/theme.service';
 
 @Component({
   selector: 'app-root',
@@ -10,13 +11,7 @@ import { RouterOutlet } from '@angular/router';
 export class App {
   protected readonly title = signal('motasu-webclient');
 
-  constructor() {
-    afterNextRender(() => {
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      
-      if (prefersDark) {
-        document.body.classList.add('dark-theme');
-      }
-    });
+  constructor(private themeService: ThemeService) {
+    // Le thème est maintenant géré par ThemeService
   }
 }
