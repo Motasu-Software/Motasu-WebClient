@@ -1,0 +1,53 @@
+<div class="profile-shell">
+  <header class="app-header">
+    <div class="header-content">
+      <h1 class="brand" (click)="router.navigate(['/'])">Motasu</h1>
+      <button class="theme-toggle" (click)="toggleTheme()" type="button">
+        {{ themeService.isDark() ? '☀️' : '🌙' }}
+      </button>
+    </div>
+  </header>
+
+  <main class="profile-content">
+    <button class="back-button" (click)="goBack()" type="button">← Retour</button>
+
+    <div *ngIf="isLoading()" class="loading-state">Chargement du profil...</div>
+    <div *ngIf="errorMessage()" class="error-state">{{ errorMessage() }}</div>
+
+    <div *ngIf="!isLoading() && !errorMessage() && user()" class="profile-layout">
+      <section class="profile-info">
+        <div class="profile-avatar">
+          <div class="avatar-placeholder">{{ (user()?.username || user()?.email)?.charAt(0)?.toUpperCase() }}</div>
+        </div>
+        <div class="profile-details">
+          <h1>{{ user()?.username || user()?.email }}</h1>
+          <p class="profile-email">{{ user()?.email }}</p>
+          <p class="profile-joined">
+            Membre depuis {{ user()?.createdAt | date:'mediumDate' }}
+          </p>
+        </div>
+      </section>
+
+      <section class="user-posts-section">
+        <h2>Posts de {{ user()?.username || user()?.email }}</h2>
+
+        <div *ngIf="userPosts().length === 0" class="no-posts">
+          Aucun post publié pour le moment.
+        </div>
+
+        <div class="posts-grid">
+          <article class="post-card" *ngFor="let post of userPosts(); trackBy: trackByPost">
+            <header>
+              <h3>{{ post.title }}</h3>
+              <span class="post-meta">{{ post.circuit }} · {{ post.car }} · {{ post.lapTime }}</span>
+            </header>
+            <p>{{ post.description }}</p>
+            <footer>
+              <span>{{ post.createdAt | date:'short' }}</span>
+            </footer>
+          </article>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>

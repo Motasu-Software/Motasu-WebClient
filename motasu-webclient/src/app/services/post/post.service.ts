@@ -47,6 +47,14 @@ const CREATE_POST_MUTATION = gql`
   }
 `;
 
+const DELETE_POST_MUTATION = gql`
+  mutation DeletePost($id: ID!) {
+    deletePost(id: $id) {
+      id
+    }
+  }
+`;
+
 @Injectable({
   providedIn: 'root',
 })
@@ -110,6 +118,23 @@ export class PostService {
             createdAt: post.createdAt,
             updatedAt: post.updatedAt,
           };
+        }),
+      );
+  }
+
+  deletePost(id: string): Observable<{ id: string }> {
+    return this.apollo
+      .mutate<{ deletePost: any }>({
+        mutation: DELETE_POST_MUTATION,
+        variables: { id },
+      })
+      .pipe(
+        map((result) => {
+          const deletedPost = result.data?.deletePost;
+          if (!deletedPost) {
+            throw new Error('Impossible de supprimer le post.');
+          }
+          return { id: deletedPost.id };
         }),
       );
   }

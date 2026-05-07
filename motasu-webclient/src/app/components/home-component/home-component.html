@@ -1,9 +1,12 @@
 <div class="home-shell">
-  <nav class="home-toolbar">
-    <div class="toolbar-item">Accueil</div>
-    <button class="toolbar-add" type="button" (click)="goToCreatePost()">+ Nouveau post</button>
-    <div class="toolbar-item">Fil d'actualité</div>
-  </nav>
+  <header class="app-header">
+    <div class="header-content">
+      <h1 class="brand" (click)="router.navigate(['/'])">Motasu</h1>
+      <button class="theme-toggle" (click)="toggleTheme()" type="button">
+        {{ themeService.isDark() ? '☀️' : '🌙' }}
+      </button>
+    </div>
+  </header>
 
   <section class="feed-section">
     <div class="feed-header">
@@ -23,12 +26,18 @@
     <div class="posts-grid">
       <article class="post-card" *ngFor="let post of posts(); trackBy: trackByPost">
         <header>
+          <div class="post-menu" *ngIf="canDeletePost(post)">
+            <button class="menu-trigger" type="button">⋯</button>
+            <div class="menu-dropdown">
+              <button type="button" class="menu-item delete" (click)="deletePost(post)">Supprimer</button>
+            </div>
+          </div>
           <h2>{{ post.title }}</h2>
           <span class="post-meta">{{ post.circuit }} · {{ post.car }} · {{ post.lapTime }}</span>
         </header>
         <p>{{ post.description }}</p>
         <footer>
-          <span>par {{ post.authorEmail || 'Anonyme' }}</span>
+          <span class="author-link" (click)="goToProfile(post.authorEmail)">{{ post.authorEmail || 'Anonyme' }}</span>
           <span>{{ post.createdAt | date:'short' }}</span>
         </footer>
       </article>
