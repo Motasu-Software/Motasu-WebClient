@@ -1,13 +1,4 @@
 <div class="profile-shell">
-  <header class="app-header">
-    <div class="header-content">
-      <h1 class="brand" (click)="router.navigate(['/'])">Motasu</h1>
-      <button class="theme-toggle" (click)="toggleTheme()" type="button">
-        {{ themeService.isDark() ? '☀️' : '🌙' }}
-      </button>
-    </div>
-  </header>
-
   <main class="profile-content">
     <button class="back-button" (click)="goBack()" type="button">← Retour</button>
 

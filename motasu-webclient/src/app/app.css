@@ -10,6 +10,13 @@
   --primary: #02C3F7;      /* [cite: 3] */
   --accent: #98E909;       /* [cite: 2] */
   --border: #e0e0e0;
+  --page-bg: #f4f7f6;
+  --surface-bg: #ffffff;
+  --input-bg: #ffffff;
+  --input-text: #1B1F17;
+  --button-primary-bg: #38bdf8;
+  --button-primary-text: #0f172a;
+  --button-secondary-text: #7D6D61;
 
   /* Attribution des polices aux variables */
   --font-title: 'Rajdhani', sans-serif;
@@ -26,6 +33,11 @@ body.dark-theme {
   --primary: #02C3F7;      /* [cite: 3] */
   --accent: #98E909;       /* [cite: 2] - Gardé en Lime pour le contraste sur Marine/Noir */
   --border: #2c3e50;
+  --page-bg: radial-gradient(circle at top, rgba(54, 92, 203, 0.12), transparent 40%), #0f172a;
+  --surface-bg: rgba(15, 23, 42, 0.85);
+  --input-bg: #1e293b;
+  --input-text: #ffffff;
+  --button-secondary-text: #cbd5e1;
 }
 
 /* RESET ET VERROUILLAGE HIERARCHIQUE */
@@ -45,7 +57,7 @@ html, body, app-root {
 
 body {
   font-family: var(--font-body); /* Police par défaut : Exo 2 */
-  background-color: var(--bg-app);
+  background: var(--page-bg);
   color: var(--text-main);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

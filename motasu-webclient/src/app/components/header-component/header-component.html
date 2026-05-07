@@ -1,0 +1,19 @@
+<header class="app-header">
+  <div class="header-content">
+    <h1 class="brand" (click)="router.navigate(['/'])">Motasu</h1>
+
+    <div class="header-actions">
+      <div class="settings-menu">
+        <button class="settings-trigger" type="button" aria-label="Paramètres">
+          ⚙️
+        </button>
+        <div class="settings-dropdown">
+          <button type="button" class="menu-item theme-item" (click)="toggleTheme()">
+            {{ themeService.isDark() ? '☀️ Mode clair' : '🌙 Mode sombre' }}
+          </button>
+          <button type="button" class="menu-item" (click)="logout()">Se déconnecter</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
