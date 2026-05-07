@@ -72,6 +72,11 @@ export class HomeComponent {
     return this.currentUserEmail() === post.authorEmail;
   }
 
+  logout() {
+    this.userService.clearUser();
+    this.router.navigate(['/auth']);
+  }
+
   deletePost(post: Post) {
     if (!this.canDeletePost(post)) {
       return;
