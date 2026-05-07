@@ -2,7 +2,6 @@ import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserProfileService } from '../../services/user-profile/user-profile.service';
-import { ThemeService } from '../../services/theme/theme.service';
 import { User } from '../../model/user.model';
 import { Post } from '../../model/post';
 
@@ -16,7 +15,6 @@ export class UserProfileComponent implements OnInit {
   route = inject(ActivatedRoute);
   router = inject(Router);
   userProfileService = inject(UserProfileService);
-  themeService = inject(ThemeService);
 
   user = signal<User | null>(null);
   userPosts = signal<Post[]>([]);
@@ -62,10 +60,6 @@ export class UserProfileComponent implements OnInit {
 
   goBack() {
     this.router.navigate(['/']);
-  }
-
-  toggleTheme() {
-    this.themeService.toggleTheme();
   }
 
   trackByPost(index: number, post: Post) {

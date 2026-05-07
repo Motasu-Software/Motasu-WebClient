@@ -1,9 +1,9 @@
 :host {
   display: block;
   min-height: 100vh;
-  padding: 24px;
-  background: radial-gradient(circle at top, rgba(54, 92, 203, 0.12), transparent 40%), #0f172a;
-  color: white;
+  padding: 100px 24px 24px;
+  background: var(--page-bg);
+  color: var(--text-main);
 }
 
 .create-post-header {
@@ -18,7 +18,7 @@
 
 .create-post-header p {
   margin: 0;
-  color: #cbd5e1;
+  color: var(--text-muted);
 }
 
 .create-post-form {
@@ -36,16 +36,16 @@
 
 .field-group label {
   font-weight: 700;
-  color: #e2e8f0;
+  color: var(--text-main);
 }
 
 .field-group input,
 .field-group textarea {
-  border: 1px solid #334155;
+  border: 1px solid var(--border);
   border-radius: 12px;
   padding: 14px;
-  background: #1e293b;
-  color: white;
+  background: var(--input-bg);
+  color: var(--input-text);
 }
 
 .grid-row {
@@ -71,8 +71,8 @@
 }
 
 .primary-button {
-  background: #38bdf8;
-  color: #0f172a;
+  background: var(--button-primary-bg);
+  color: var(--button-primary-text);
 }
 
 .primary-button:disabled {
@@ -82,8 +82,8 @@
 
 .secondary-button {
   background: transparent;
-  border: 1px solid #94a3b8;
-  color: #cbd5e1;
+  border: 1px solid var(--border);
+  color: var(--button-secondary-text);
 }
 
 .form-error {
